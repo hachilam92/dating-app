@@ -3,6 +3,8 @@ using System.Security.Cryptography.X509Certificates;
 using AutoMapper;
 using DTOs;
 using Entities;
+using Extensions;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Helpers
@@ -17,7 +19,11 @@ namespace Helpers
                     opt => opt.MapFrom(
                         src => src.Photos.FirstOrDefault(
                             x => x.IsMain
-                        ).Url
+                        ).Url))
+                .ForMember(
+                    dest => dest.Age,
+                    OPT => OPT.MapFrom(
+                        src => src.DateOfBirth.CalculateAge()
                     ));
             CreateMap<Photo, PhotoDTO>();
         }
