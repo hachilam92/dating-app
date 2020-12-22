@@ -25,7 +25,10 @@ namespace Helpers
                     OPT => OPT.MapFrom(
                         src => src.DateOfBirth.CalculateAge()
                     ));
+
             CreateMap<Photo, PhotoDTO>();
+
+            CreateMap<MemberUpdateDTO, AppUser>();
         }
     }
 }
