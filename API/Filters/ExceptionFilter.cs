@@ -23,6 +23,8 @@ namespace Filters
 			var json = JsonSerializer.Serialize(response, options);
 
             await context.HttpContext.Response.WriteAsync(json);
+
+			context.ExceptionHandled = true;
 		}
 
   }

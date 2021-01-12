@@ -26,7 +26,7 @@ namespace API
         {
             services.AddApplicationServices(_config);
             services.AddMvc(_config => {
-                _config.Filters.Add(typeof(ExceptionFilter));
+                _config.Filters.Add(new ExceptionFilter());
             });
             services.AddCors();
             services.AddControllers();
