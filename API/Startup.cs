@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Extensions;
 using Middleware;
+using Filters;
 
 namespace API
 {
@@ -24,6 +25,9 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddApplicationServices(_config);
+            services.AddMvc(_config => {
+                _config.Filters.Add(typeof(ExceptionFilter));
+            });
             services.AddCors();
             services.AddControllers();
             services.AddIdentityServices(_config);
@@ -36,7 +40,7 @@ namespace API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseMiddleware<ExceptionMiddleware>();
+            // app.UseMiddleware<ExceptionMiddleware>();
 
             if (env.IsDevelopment())
             {
