@@ -38,6 +38,7 @@ namespace Services
     public async Task<AppUser> VerifyUser(LoginDTO loginDTO)
     {
         var user = await _context.Users
+            .Include(p => p.Photos)
             .SingleOrDefaultAsync<AppUser>(x => x.UserName == loginDTO.UserName);
 
         if(user == null) return null;
