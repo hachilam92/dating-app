@@ -77,5 +77,13 @@ namespace API.Controllers
 
             return BadRequest("Problem adding photo");
         }
+
+        [HttpPut("set-main-photo/{photoId}")]
+        public async Task<ActionResult> SetMainPhoto(int photoId)
+        {
+            var result = await _photoService.SetMainPhotoAsync(User.GetUsername(), photoId);
+
+            return result ? NoContent() : BadRequest("Fail to set main photo");
+        }
     }
 }
