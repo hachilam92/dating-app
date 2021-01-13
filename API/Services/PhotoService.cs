@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
@@ -61,6 +62,23 @@ namespace Services
       }
       
       return uploadResult;
+    }
+
+    public async Task<bool> SetMainPhotoAsync(string username, int photoId)
+    {
+      var user = await _userRepository.GetUserByUsernameAsync(username);
+
+      var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
+
+      if (photo.IsMain) return true;
+
+      var currentMain = user.Photos.FirstOrDefault(x => x.IsMain);
+      if (currentMain != null) currentMain.IsMain = false;
+      photo.IsMain = true;
+
+      if (await _userRepository.SaveAllAsync()) return true;
+
+      return false;
     }
 
     public async Task<DeletionResult> DeletePhotoAsync(string publicId)
