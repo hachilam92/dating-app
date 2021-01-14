@@ -29,6 +29,8 @@ namespace Helpers
             CreateMap<Photo, PhotoDTO>();
 
             CreateMap<MemberUpdateDTO, AppUser>();
+
+            CreateMap<RegisterDTO, AppUser>();
         }
     }
 }
