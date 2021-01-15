@@ -8,7 +8,10 @@ namespace Helpers
             int totalItems,
             int totalPages
         ) {
-
+            this.CurrentPage = currentPage;
+            this.ItemsPerPage = itemsPerPage;
+            this.TotalItems = totalItems;
+            this.TotalPages = totalPages;
         }
 
         public int CurrentPage { get; set; }
