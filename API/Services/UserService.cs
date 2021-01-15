@@ -5,6 +5,7 @@ using AutoMapper;
 using CloudinaryDotNet.Actions;
 using DTOs;
 using Entities;
+using Helpers;
 using Interfaces;
 using Services.Interface;
 
@@ -30,9 +31,9 @@ namespace Services
 			return await _userRepository.GetUserByUsernameAsync(username);
 		}
 
-		public async Task<IEnumerable<MemberDTO>> GetUsers()
+		public async Task<PagedList<MemberDTO>> GetUsers(UserParams userParams)
 		{
-			return await _userRepository.GetMembersAsync();
+			return await _userRepository.GetMembersAsync(userParams);
 		}
 
 		public async Task<bool> UpdateUser(MemberUpdateDTO memberUpdateDTO, string username)

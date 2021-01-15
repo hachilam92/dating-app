@@ -3,12 +3,13 @@ using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using DTOs;
 using Entities;
+using Helpers;
 
 namespace Services.Interface
 {
     public interface IUserService
     {
-        Task<IEnumerable<MemberDTO>> GetUsers();
+        Task<PagedList<MemberDTO>> GetUsers(UserParams userParams);
         Task<MemberDTO> GetUser(string username);
         Task<AppUser> GetUserByUsername(string username);
         Task<bool> UpdateUser(MemberUpdateDTO memberUpdateDTO, string username);
