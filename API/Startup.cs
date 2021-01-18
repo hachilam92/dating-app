@@ -8,6 +8,9 @@ using Microsoft.OpenApi.Models;
 using Extensions;
 using Middleware;
 using Filters;
+using System;
+using System.Text.Json;
+using System.Linq;
 
 namespace API
 {
@@ -53,7 +56,12 @@ namespace API
 
             app.UseRouting();
 
-            app.UseCors(X => X.AllowAnyHeader().AllowAnyMethod().WithOrigins(_config["Origin"]));
+            app.UseCors(X => X.AllowAnyHeader().AllowAnyMethod().WithOrigins(_config
+                .GetSection("Origins")
+                .GetChildren()
+                .Select(x => x.Value)
+                .ToArray()
+            ));
 
             app.UseAuthentication();
 
