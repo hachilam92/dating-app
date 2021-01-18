@@ -55,10 +55,7 @@ namespace Services
 				PublicId = result.PublicId
 			};
 
-			if(user.Photos.Count == 0)
-			{
-				photo.IsMain = true;
-			}
+			photo.IsMain = !user.Photos.Any();
 
 			user.Photos.Add(photo);
 
