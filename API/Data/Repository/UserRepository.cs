@@ -20,8 +20,7 @@ namespace Data
     public UserRepository(
       	DataContext context,
       	IMapper mapper
-    )
-    {
+    ) {
         _context = context;
         _mapper = mapper;
     }
@@ -50,7 +49,8 @@ namespace Data
 			query
 				.ProjectTo<MemberDTO>(_mapper.ConfigurationProvider)
 				.AsNoTracking(), 
-			userParams.PageNumber, userParams.PageSize
+			userParams.PageNumber, 
+			userParams.PageSize
 		);
     }
 
