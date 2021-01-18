@@ -5,6 +5,7 @@ using Helpers;
 using Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using Services.Interface;
 
 namespace Services
 {
@@ -13,16 +14,11 @@ namespace Services
     private readonly Cloudinary _cloudinary;
     private readonly IUserRepository _userRepository;
 
-    public PhotoService(IOptions<CloudinarySettings> config, IUserRepository userRepository)
+    public PhotoService(ICloudinaryService cloudinaryService, IUserRepository userRepository)
     {
-        var acc = new Account
-        (
-            config.Value.CloudName,
-            config.Value.ApiKey,
-            config.Value.ApiSecret
-        );
 
-        _cloudinary = new Cloudinary(acc);
+
+        _cloudinary = cloudinaryService.CreateCloudinary();
 		_userRepository = userRepository;
     }
 

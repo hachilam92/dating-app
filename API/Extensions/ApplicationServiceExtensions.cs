@@ -20,6 +20,7 @@ namespace Extensions
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICloudinaryService, CloudinaryService>();
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
