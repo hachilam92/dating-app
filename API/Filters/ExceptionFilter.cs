@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using API.Errors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Serilog;
 
 namespace Filters
 {
@@ -11,7 +12,7 @@ namespace Filters
 	{
 		public async Task OnExceptionAsync(ExceptionContext context)
 		{
-			Console.WriteLine(context.Exception.Message);
+			Log.Error(context.Exception.Message);
 			
 			var response = new ApiException(context.HttpContext.Response.StatusCode, "Internal server error");
 			
