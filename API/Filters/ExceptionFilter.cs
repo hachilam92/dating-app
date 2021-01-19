@@ -12,9 +12,7 @@ namespace Filters
 	{
 		public async Task OnExceptionAsync(ExceptionContext context)
 		{
-			Log.Error(context.Exception.Message);
-			
-			var response = new ApiException(context.HttpContext.Response.StatusCode, "Internal server error");
+			var response = new ApiException(500, "Internal server error");
 			
 			var options = new JsonSerializerOptions
 			{

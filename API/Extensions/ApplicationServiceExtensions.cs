@@ -19,6 +19,7 @@ namespace Extensions
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<LogUserActivity>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICloudinaryService, CloudinaryService>();
             services.AddScoped<IPhotoService, PhotoService>();

@@ -1,11 +1,10 @@
 using System.Threading.Tasks;
-using API.Data;
-using Entities;
 using Microsoft.AspNetCore.Mvc;
 using DTOs;
 using Interfaces;
 using Services.Interface;
 using System.Linq;
+using Entities;
 
 namespace Controllers
 {
