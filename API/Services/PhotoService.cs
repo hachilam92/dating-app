@@ -1,11 +1,9 @@
 using System.Threading.Tasks;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using Entities;
 using Helpers;
 using Interfaces;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace Services
@@ -28,23 +26,6 @@ namespace Services
 		_userRepository = userRepository;
     }
 
-    public async Task<Photo> AddPhotoAsync(ImageUploadResult result, AppUser user)
-    {
-		var photo = new Photo
-		{
-			Url = result.SecureUrl.AbsoluteUri,
-			PublicId = result.PublicId
-		};
-
-		if(user.Photos.Count == 0)
-		{
-			photo.IsMain = true;
-		}
-
-		user.Photos.Add(photo);
-
-		return await _userRepository.SaveAllAsync() ? photo : null;
-    }
     public async Task<ImageUploadResult> UploadPhotoAsync(IFormFile file)
     {
       var uploadResult = new ImageUploadResult();

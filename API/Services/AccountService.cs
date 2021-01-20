@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using API.Data;
+using AutoMapper;
 using DTOs;
 using Entities;
 using Microsoft.EntityFrameworkCore;
@@ -12,22 +13,23 @@ namespace Services
   public class AccountService : IAccountService
   {
     private readonly DataContext _context;
-    public AccountService(DataContext context) 
+    private readonly IMapper _mapper;
+    public AccountService(DataContext context, IMapper mapper) 
     {
         _context = context;
+        _mapper = mapper;
     }
     public async Task<AppUser> AddUser(RegisterDTO registerDTO)
     {
         if (await UserExists(registerDTO.UserName)) return null;
 
+        var user = _mapper.Map<AppUser>(registerDTO);
+
         using var hmac = new HMACSHA512();
 
-        var user = new AppUser
-        {
-            UserName = registerDTO.UserName,
-            PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password)),
-            PasswordSalt = hmac.Key,
-        };
+        user.UserName = registerDTO.UserName;
+        user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password));
+        user.PasswordSalt = hmac.Key;
 
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
@@ -38,6 +40,7 @@ namespace Services
     public async Task<AppUser> VerifyUser(LoginDTO loginDTO)
     {
         var user = await _context.Users
+            .Include(p => p.Photos)
             .SingleOrDefaultAsync<AppUser>(x => x.UserName == loginDTO.UserName);
 
         if(user == null) return null;
