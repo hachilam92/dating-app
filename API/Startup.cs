@@ -28,11 +28,12 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddApplicationServices(_config);
-            services.AddMvc(_config => {
-                _config.Filters.Add(new ExceptionFilter());
-            });
             services.AddCors();
-            services.AddControllers();
+            services
+                .AddControllers(config => {
+                    config.Filters.Add(new ExceptionFilter());})
+                .AddJsonOptions(option => {
+                    option.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;});
             services.AddIdentityServices(_config);
             services.AddSwaggerGen(c =>
             {
