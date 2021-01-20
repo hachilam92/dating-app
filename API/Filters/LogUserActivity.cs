@@ -5,7 +5,7 @@ using Interfaces;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Helpers
+namespace Filters
 {
   public class LogUserActivity : IAsyncActionFilter
   {

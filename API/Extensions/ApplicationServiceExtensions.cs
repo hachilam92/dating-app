@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Services;
 using AutoMapper;
 using Services.Interface;
+using Filters;
 
 namespace Extensions
 {
