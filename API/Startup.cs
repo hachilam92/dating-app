@@ -31,9 +31,11 @@ namespace API
             services.AddCors();
             services
                 .AddControllers(config => {
-                    config.Filters.Add(new ExceptionFilter());})
+                    config.Filters.Add(new ExceptionFilter());
+                })
                 .AddJsonOptions(option => {
-                    option.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;});
+                    option.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                });
             services.AddIdentityServices(_config);
             services.AddSwaggerGen(c =>
             {
