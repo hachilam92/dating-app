@@ -1,9 +1,11 @@
 using System.Threading.Tasks;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Entities;
 using Helpers;
 using Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace Services
@@ -11,8 +13,9 @@ namespace Services
   public class PhotoService : IPhotoService
   {
     private readonly Cloudinary _cloudinary;
+    private readonly IUserRepository _userRepository;
 
-    public PhotoService(IOptions<CloudinarySettings> config)
+    public PhotoService(IOptions<CloudinarySettings> config, IUserRepository userRepository)
     {
         var acc = new Account
         (
@@ -22,8 +25,27 @@ namespace Services
         );
 
         _cloudinary = new Cloudinary(acc);
+		_userRepository = userRepository;
     }
-    public async Task<ImageUploadResult> AddPhotoAsync(IFormFile file)
+
+    public async Task<Photo> AddPhotoAsync(ImageUploadResult result, AppUser user)
+    {
+		var photo = new Photo
+		{
+			Url = result.SecureUrl.AbsoluteUri,
+			PublicId = result.PublicId
+		};
+
+		if(user.Photos.Count == 0)
+		{
+			photo.IsMain = true;
+		}
+
+		user.Photos.Add(photo);
+
+		return await _userRepository.SaveAllAsync() ? photo : null;
+    }
+    public async Task<ImageUploadResult> UploadPhotoAsync(IFormFile file)
     {
       var uploadResult = new ImageUploadResult();
 
