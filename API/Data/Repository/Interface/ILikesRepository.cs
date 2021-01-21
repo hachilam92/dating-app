@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DTOs;
 using Entities;
+using Helpers;
 
 namespace Data.Repository.Interface
 {
@@ -9,7 +10,7 @@ namespace Data.Repository.Interface
     {
         Task<UserLike> GetUserLike(int sourceUserId, int likedUserId);
         Task<AppUser> GetUserWithLikes(int userId);
-        Task<IEnumerable<LikeDTO>> GetUserLikes(string predicate, int userId);
+        Task<PagedList<LikeDTO>> GetUserLikes(LikesParams likesParams);
 
     }
 }

@@ -6,6 +6,7 @@ using Data.Repository.Interface;
 using DTOs;
 using Entities;
 using Extensions;
+using Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repository
@@ -23,8 +24,11 @@ namespace Data.Repository
             return await _context.Likes.FindAsync(sourceUserId, likedUserId);
         }
 
-        public async Task<IEnumerable<LikeDTO>> GetUserLikes(string predicate, int userId)
+        public async Task<PagedList<LikeDTO>> GetUserLikes(LikesParams likesParams)
         {
+            var predicate = likesParams.Predicate;
+            var userId = likesParams.UserId;
+
             var users = _context.Users.OrderBy(u => u.UserName).AsQueryable();
             var likes = _context.Likes.AsQueryable();
 
@@ -40,7 +44,7 @@ namespace Data.Repository
                 users = likes.Select(like => like.SourceUser);
             }
 
-            return await users.Select(user => new LikeDTO
+            var likedUsers = users.Select(user => new LikeDTO
             {
                 Username = user.UserName,
                 KnownAs = user.KnownAs,
@@ -48,7 +52,13 @@ namespace Data.Repository
                 PhotoUrl = user.Photos.FirstOrDefault(p => p.IsMain).Url,
                 City = user.City,
                 Id = userId
-            }).ToListAsync();
+            });
+
+            return await PagedList<LikeDTO>.CreateAsync(
+                likedUsers, 
+                likesParams.PageNumber, 
+                likesParams.PageSize
+            );
         }
 
         public async Task<AppUser> GetUserWithLikes(int userId)

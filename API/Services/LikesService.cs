@@ -1,9 +1,9 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using CustomExceptions;
 using Data.Repository.Interface;
 using DTOs;
 using Entities;
+using Helpers;
 using Interfaces;
 using Services.Interface;
 
@@ -41,9 +41,9 @@ namespace Services
             return await _userRepository.SaveAllAsync();
         }
 
-        public async Task<IEnumerable<LikeDTO>> GetUserLikes(string predicate, int currentUserId)
+        public async Task<PagedList<LikeDTO>> GetUserLikes(LikesParams likesParams)
         {
-            return await _likeRepository.GetUserLikes(predicate, currentUserId);
+            return await _likeRepository.GetUserLikes(likesParams);
         }
     }
 }

@@ -1,12 +1,12 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using DTOs;
+using Helpers;
 
 namespace Services.Interface
 {
     public interface ILikesService
     {
         Task<bool> AddLike(int currentUserId, string likedUsername);
-        Task<IEnumerable<LikeDTO>> GetUserLikes(string predicate, int currentUserId);
+        Task<PagedList<LikeDTO>> GetUserLikes(LikesParams likesParams);
     }
 }
