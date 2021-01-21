@@ -9,6 +9,8 @@ using Services;
 using AutoMapper;
 using Services.Interface;
 using Filters;
+using Data.Repository.Interface;
+using Data.Repository;
 
 namespace Extensions
 {
@@ -24,7 +26,9 @@ namespace Extensions
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICloudinaryService, CloudinaryService>();
             services.AddScoped<IPhotoService, PhotoService>();
+            services.AddScoped<ILikesService, LikesService>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ILikesRepository, LikeRepository>();
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
             services.AddDbContext<DataContext>(options =>
             {
