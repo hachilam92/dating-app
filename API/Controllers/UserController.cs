@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Controllers;
@@ -33,16 +32,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<PagedList<MemberDTO>>> GetUsers([FromQuery]UserParams userParams)
         {
-            var user = await _userService.GetUserByUsername(User.GetUsername());
-
-            userParams.CurrentUsername = user.UserName;
-
-            if (string.IsNullOrEmpty(userParams.Gender)) 
-            {
-                userParams.Gender = user.Gender == "male" ? "female" : "male";
-            }
-
-            var users = await _userService.GetUsers(userParams);
+            var users = await _userService.GetUsers(User.GetUsername(), userParams);
 
             Response.AddPaginationHeader(
                 users.CurrentPage,
@@ -73,19 +63,13 @@ namespace API.Controllers
         [HttpPost("add-photo")]
         public async Task<ActionResult<PhotoDTO>> AddPhoto(IFormFile file)
         {
-            var user = await _userService.GetUserByUsername(User.GetUsername());
-
-            var result = await _photoService.UploadPhotoAsync(file);
-
-            if (result.Error != null) return BadRequest(result.Error.Message);
-
-            var photo = await _userService.AddPhotoAsync(result, user);
+            var photo = await _userService.AddPhotoAsync(User.GetUsername(), file);
 
             if (photo != null) 
             {
                 return CreatedAtRoute(
                     "GetUser",
-                    new { username = user.UserName },
+                    new { username = User.GetUsername() },
                     _mapper.Map<PhotoDTO>(photo));
             }
 
@@ -103,21 +87,7 @@ namespace API.Controllers
         [HttpDelete("delete-photo/{photoId}")]
         public async Task<ActionResult> DeletePhoto(int photoId)
         {
-            var user = await _userService.GetUserByUsername(User.GetUsername());
-
-            var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
-
-            if (photo == null) return NotFound();
-
-            if (photo.IsMain) return BadRequest("You cannot delete your main photo");
-
-            if (photo.PublicId != null)
-            {
-                var result = await _photoService.DeletePhotoAsync(photo.PublicId);
-                if (result.Error != null) return BadRequest(result.Error.Message);
-            }
-
-            if (await _userService.DeletePhotoAsync(user, photo)) return Ok();
+            if (await _userService.DeletePhotoAsync(User.GetUsername(), photoId)) return Ok();
 
             return BadRequest("Fail to delete the photo");
         } 
