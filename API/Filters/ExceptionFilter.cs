@@ -1,10 +1,9 @@
-using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using API.Errors;
+using CustomExceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Serilog;
 
 namespace Filters
 {
@@ -13,6 +12,11 @@ namespace Filters
 		public async Task OnExceptionAsync(ExceptionContext context)
 		{
 			var response = new ApiException(500, "Internal server error");
+
+			if (context.Exception is CustomException exception)
+			{
+				response = new ApiException(exception.StatusCode, exception.ErrorMessage);
+			}
 			
 			var options = new JsonSerializerOptions
 			{

@@ -1,4 +1,5 @@
 using API.Data;
+using CustomExceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +26,7 @@ namespace Controllers
         {
             var thing = _context.Users.Find(-1);
 
-            if(thing == null) return NotFound();
+            if(thing == null) throw new NotFoundException();
 
             return Ok(thing);
         }
@@ -43,7 +44,7 @@ namespace Controllers
         [HttpGet("bad-request")]
         public ActionResult<string> GetBasRequest()
         {
-            return BadRequest("This was not a good request");
+            throw new BadRequestException();
         }
     }
 }
