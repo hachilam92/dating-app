@@ -1,9 +1,11 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using CustomExceptions;
 using Data.Repository.Interface;
 using DTOs;
 using Entities;
+using Helpers;
 using Interfaces;
 using Services.Interface;
 
@@ -51,5 +53,19 @@ namespace Services
 
             return null; 
         }
-    }
+
+        public async Task<PagedList<MessageDTO>> GetMessagesForUser(
+            string currentUsername,
+            MessageParams messageParams
+        ) {
+            messageParams.Username = currentUsername;
+
+            return await _messageRepository.GetMessageForUser(messageParams);
+        }
+
+        public async Task<IEnumerable<MessageDTO>> GetMessageThread(string currentUsername, string username)
+        {
+            return await _messageRepository.GetMessageThread(currentUsername, username);
+        }
+  }
 }
