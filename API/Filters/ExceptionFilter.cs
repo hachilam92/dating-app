@@ -1,9 +1,11 @@
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using API.Errors;
 using CustomExceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Hosting;
 
 namespace Filters
 {
@@ -11,12 +13,18 @@ namespace Filters
 	{
 		public async Task OnExceptionAsync(ExceptionContext context)
 		{
-			var response = new ApiException(500, "Internal server error");
+			var errorCode = 500;
+			var errorMessage = "Internal server error";
 
 			if (context.Exception is CustomException exception)
 			{
-				response = new ApiException(exception.StatusCode, exception.ErrorMessage);
+				errorCode = exception.StatusCode;
+				errorMessage = exception.ErrorMessage;
 			}
+			var response = new ApiException(
+				errorCode,
+				errorMessage
+			);
 			
 			var options = new JsonSerializerOptions
 			{
@@ -25,6 +33,7 @@ namespace Filters
 
 			var json = JsonSerializer.Serialize(response, options);
 
+			context.HttpContext.Response.StatusCode = errorCode;
             await context.HttpContext.Response.WriteAsync(json);
 
 			context.ExceptionHandled = true;

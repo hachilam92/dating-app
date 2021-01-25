@@ -11,6 +11,7 @@ using Filters;
 using System;
 using System.Text.Json;
 using System.Linq;
+using Serilog;
 
 namespace API
 {
@@ -56,6 +57,8 @@ namespace API
             }
 
             app.UseHttpsRedirection();
+
+            app.UseSerilogRequestLogging();
 
             app.UseRouting();
 

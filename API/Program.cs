@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace API
@@ -21,11 +20,13 @@ namespace API
             var services = scope.ServiceProvider;
 
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .WriteTo.Console()
-                .CreateLogger();
-
-            Log.Information("Application started");
+                .MinimumLevel
+				.Debug()
+				.WriteTo.Console()
+				.WriteTo.Seq("http://localhost:5341")
+				.CreateLogger();
+			
+			Log.Information("Application started");
 
             try
             {
@@ -45,6 +46,7 @@ namespace API
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
