@@ -11,8 +11,6 @@ using Services.Interface;
 using Filters;
 using Data.Repository.Interface;
 using Data.Repository;
-using Serilog;
-using Microsoft.Extensions.Logging;
 
 namespace Extensions
 {

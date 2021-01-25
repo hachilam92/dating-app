@@ -1,11 +1,9 @@
-using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using API.Errors;
 using CustomExceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Hosting;
 
 namespace Filters
 {
