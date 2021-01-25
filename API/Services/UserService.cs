@@ -1,11 +1,12 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using CloudinaryDotNet.Actions;
+using CustomExceptions;
 using DTOs;
 using Entities;
+using Helpers;
 using Interfaces;
+using Microsoft.AspNetCore.Http;
 using Services.Interface;
 
 namespace Services
@@ -14,10 +15,15 @@ namespace Services
 	{
 		private readonly IUserRepository _userRepository;
 		private readonly IMapper _mapper;
-		public UserService(IUserRepository userRepository, IMapper mapper)
-		{
+		private readonly IPhotoService _photoService;
+		public UserService(
+			IUserRepository userRepository,
+			IMapper mapper, 
+			IPhotoService photoService
+		) {
 			_userRepository = userRepository;
 			_mapper = mapper;
+			_photoService = photoService;
 		}
 
 		public async Task<MemberDTO> GetUser(string username)
@@ -30,9 +36,18 @@ namespace Services
 			return await _userRepository.GetUserByUsernameAsync(username);
 		}
 
-		public async Task<IEnumerable<MemberDTO>> GetUsers()
+		public async Task<PagedList<MemberDTO>> GetUsers(string username, UserParams userParams)
 		{
-			return await _userRepository.GetMembersAsync();
+			var user = await GetUserByUsername(username);
+
+            userParams.CurrentUsername = user.UserName;
+
+            if (string.IsNullOrEmpty(userParams.Gender)) 
+            {
+                userParams.Gender = user.Gender == "male" ? "female" : "male";
+            }
+
+			return await _userRepository.GetMembersAsync(userParams);
 		}
 
 		public async Task<bool> UpdateUser(MemberUpdateDTO memberUpdateDTO, string username)
@@ -46,18 +61,21 @@ namespace Services
             return await _userRepository.SaveAllAsync();
 		}
 
-		public async Task<Photo> AddPhotoAsync(ImageUploadResult result, AppUser user)
+		public async Task<Photo> AddPhotoAsync(string username, IFormFile file)
 		{
+			var user = await GetUserByUsername(username);
+
+            var result = await _photoService.UploadPhotoAsync(file);
+
+            if (result.Error != null) throw new BadRequestException(result.Error.Message);
+
 			var photo = new Photo
 			{
 				Url = result.SecureUrl.AbsoluteUri,
 				PublicId = result.PublicId
 			};
 
-			if(user.Photos.Count == 0)
-			{
-				photo.IsMain = true;
-			}
+			photo.IsMain = !user.Photos.Any();
 
 			user.Photos.Add(photo);
 
@@ -81,8 +99,22 @@ namespace Services
 			return false;
 		}
 
-		public async Task<bool> DeletePhotoAsync(AppUser user, Photo photo)
+		public async Task<bool> DeletePhotoAsync(string username, int photoId)
 		{
+			var user = await GetUserByUsername(username);
+
+            var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
+
+			if (photo == null) throw new NotFoundException();
+
+            if (photo.IsMain) throw new BadRequestException("You cannot delete your main photo");
+
+            if (photo.PublicId != null)
+            {
+                var result = await _photoService.DeletePhotoAsync(photo.PublicId);
+                if (result.Error != null) throw new BadRequestException(result.Error.Message);
+            }
+
 			user.Photos.Remove(photo);
 
 			return await _userRepository.SaveAllAsync();

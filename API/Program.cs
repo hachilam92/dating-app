@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace API
 {
@@ -18,6 +19,14 @@ namespace API
             var host = CreateHostBuilder(args).Build();
             using var scope = host.Services.CreateScope();
             var services = scope.ServiceProvider;
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .CreateLogger();
+
+            Log.Information("Application started");
+
             try
             {
                 var context = services.GetRequiredService<DataContext>();
@@ -26,8 +35,9 @@ namespace API
             }
             catch (Exception ex)
             {
-                var logger = services.GetRequiredService<ILogger<Program>>();
-                logger.LogError(ex, "An error occurred during migration");
+                // var logger = services.GetRequiredService<ILogger<Program>>();
+                // logger.LogError(ex, "An error occurred during migration");
+                Log.Error(ex, "An error occurred during migration");
             }
 
             await host.RunAsync();

@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Services;
 using AutoMapper;
 using Services.Interface;
+using Filters;
 
 namespace Extensions
 {
@@ -19,7 +20,9 @@ namespace Extensions
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<LogUserActivity>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICloudinaryService, CloudinaryService>();
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);

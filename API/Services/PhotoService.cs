@@ -1,29 +1,19 @@
 using System.Threading.Tasks;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using Helpers;
 using Interfaces;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
+using Services.Interface;
 
 namespace Services
 {
   public class PhotoService : IPhotoService
   {
     private readonly Cloudinary _cloudinary;
-    private readonly IUserRepository _userRepository;
 
-    public PhotoService(IOptions<CloudinarySettings> config, IUserRepository userRepository)
+    public PhotoService(ICloudinaryService cloudinaryService)
     {
-        var acc = new Account
-        (
-            config.Value.CloudName,
-            config.Value.ApiKey,
-            config.Value.ApiSecret
-        );
-
-        _cloudinary = new Cloudinary(acc);
-		_userRepository = userRepository;
+        _cloudinary = cloudinaryService.CreateCloudinary();
     }
 
     public async Task<ImageUploadResult> UploadPhotoAsync(IFormFile file)

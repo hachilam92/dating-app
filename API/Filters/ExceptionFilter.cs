@@ -1,7 +1,7 @@
-using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using API.Errors;
+using CustomExceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -11,9 +11,12 @@ namespace Filters
 	{
 		public async Task OnExceptionAsync(ExceptionContext context)
 		{
-			Console.WriteLine(context.Exception.Message);
-			
-			var response = new ApiException(context.HttpContext.Response.StatusCode, "Internal server error");
+			var response = new ApiException(500, "Internal server error");
+
+			if (context.Exception is CustomException exception)
+			{
+				response = new ApiException(exception.StatusCode, exception.ErrorMessage);
+			}
 			
 			var options = new JsonSerializerOptions
 			{
