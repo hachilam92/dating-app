@@ -11,6 +11,8 @@ using Services.Interface;
 using Filters;
 using Data.Repository.Interface;
 using Data.Repository;
+using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace Extensions
 {
@@ -21,17 +23,17 @@ namespace Extensions
             IConfiguration config
         ) {
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ILikesRepository, LikeRepository>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<LogUserActivity>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICloudinaryService, CloudinaryService>();
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<ILikesService, LikesService>();
             services.AddScoped<IMessageService, MessageService>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<ILikesRepository, LikeRepository>();
-            services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddScoped<LogUserActivity>();
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
             services.AddDbContext<DataContext>(options =>
             {
