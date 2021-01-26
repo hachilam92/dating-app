@@ -54,5 +54,15 @@ namespace Controllers
         {
             return Ok(await _messageService.GetMessageThread(User.GetUsername(), username));
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteMessage(int id)
+        {
+            var username = User.GetUsername();
+
+            if (await _messageService.DeleteMessage(username, id)) return Ok();
+
+            return BadRequest("Problem deleting the message");
+        }
     }
 }

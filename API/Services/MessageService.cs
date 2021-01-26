@@ -67,5 +67,33 @@ namespace Services
         {
             return await _messageRepository.GetMessageThread(currentUsername, username);
         }
+
+        public async Task<bool> DeleteMessage(string currentUsername, int id)
+        {
+            var message = await _messageRepository.GetMessage(id);
+
+            if (message.Sender.UserName != currentUsername
+                && message.Recipient.UserName != currentUsername)
+            {
+                throw new UnauthorizedException();
+            }
+
+            if (message.Sender.UserName == currentUsername)
+            {
+                message.SenderDelted = true;
+            }
+
+            if (message.Recipient.UserName == currentUsername)
+            {
+                message.RecipientDelted = true;
+            }
+
+            if (message.SenderDelted && message.RecipientDelted)
+            {
+                _messageRepository.DeleteMessage(message);
+            }
+
+            return await _messageRepository.SaveAllAsync();
+        }
   }
 }
