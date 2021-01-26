@@ -38,7 +38,7 @@ namespace Helpers
                     opt => opt.MapFrom(src =>
                         src.Sender.Photos.FirstOrDefault(x => x.IsMain).Url))
                 .ForMember(
-                    dest => dest.SenderPhotoUrl,
+                    dest => dest.RecipientPhotoUrl,
                     opt => opt.MapFrom(src =>
                         src.Recipient.Photos.FirstOrDefault(x => x.IsMain).Url
                 ));
