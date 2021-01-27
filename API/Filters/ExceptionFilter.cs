@@ -39,6 +39,5 @@ namespace Filters
 
 			context.ExceptionHandled = true;
 		}
-
-  }
+  	}
 }
