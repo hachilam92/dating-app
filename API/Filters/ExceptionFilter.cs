@@ -4,6 +4,7 @@ using API.Errors;
 using CustomExceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Serilog;
 
 namespace Filters
 {
@@ -28,6 +29,8 @@ namespace Filters
 			{
 				PropertyNamingPolicy = JsonNamingPolicy.CamelCase
 			};
+
+			Log.Error(errorMessage + context.Exception.StackTrace);
 
 			var json = JsonSerializer.Serialize(response, options);
 

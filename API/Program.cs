@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Events;
 
 namespace API
 {
@@ -20,8 +21,9 @@ namespace API
             var services = scope.ServiceProvider;
 
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel
-				.Debug()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .Enrich.FromLogContext()
 				.WriteTo.Console()
 				.WriteTo.Seq("http://localhost:5341")
 				.CreateLogger();
@@ -41,7 +43,18 @@ namespace API
                 Log.Error(ex, "An error occurred during migration");
             }
 
-            await host.RunAsync();
+            try
+            {
+                await host.RunAsync();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Host terminated unexpectedly");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
