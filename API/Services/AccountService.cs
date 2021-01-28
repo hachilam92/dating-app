@@ -3,8 +3,10 @@ using System.Text;
 using System.Threading.Tasks;
 using API.Data;
 using AutoMapper;
+using CustomExceptions;
 using DTOs;
 using Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Services.Interface;
 
@@ -12,11 +14,16 @@ namespace Services
 {
   public class AccountService : IAccountService
   {
-    private readonly DataContext _context;
+    private readonly UserManager<AppUser> _userManager;
+    private readonly SignInManager<AppUser> _signInManager;
     private readonly IMapper _mapper;
-    public AccountService(DataContext context, IMapper mapper) 
-    {
-        _context = context;
+    public AccountService(
+        UserManager<AppUser> userManager,
+        SignInManager<AppUser> signInManager,
+        IMapper mapper
+    ) {
+        _userManager = userManager;
+        _signInManager = signInManager;
         _mapper = mapper;
     }
     public async Task<AppUser> AddUser(RegisterDTO registerDTO)
@@ -27,26 +34,32 @@ namespace Services
 
         user.UserName = registerDTO.UserName;
 
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
+        var result = await  _userManager.CreateAsync(user, registerDTO.Password);
+        
+        if (!result.Succeeded) throw new BadRequestException(result.Errors.ToString());
 
         return user;
     }
 
     public async Task<AppUser> VerifyUser(LoginDTO loginDTO)
     {
-        var user = await _context.Users
+        var user = await _userManager.Users
             .Include(p => p.Photos)
             .SingleOrDefaultAsync<AppUser>(x => x.UserName == loginDTO.UserName);
 
-        if(user == null) return null;
+        if(user == null) throw new UnauthorizedException("Invalid user name or password");
+
+        var result = await _signInManager
+            .CheckPasswordSignInAsync(user, loginDTO.Password, false);
+
+        if(!result.Succeeded) throw new UnauthorizedException("Invalid user name or password");
 
         return user;
     }
 
     private async Task<bool> UserExists(string username)
     {
-        return await _context.Users.AnyAsync(x => x.UserName == username);
+        return await _userManager.Users.AnyAsync(x => x.UserName == username);
     }
   }
 }

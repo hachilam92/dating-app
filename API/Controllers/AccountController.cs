@@ -40,8 +40,6 @@ namespace Controllers
         public async Task<ActionResult<UserDTO>> Login(LoginDTO loginDTO)
         {
             AppUser user = await _accountService.VerifyUser(loginDTO);
-            
-            if (user == null) return Unauthorized("Invalid user name or password");
 
             return new UserDTO
             {
