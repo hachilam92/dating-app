@@ -18,7 +18,7 @@ namespace Data
 
             foreach(var user in users)
             {
-                await userManager.CreateAsync(user, "password");
+                await userManager.CreateAsync(user, "Pa$$w0rd");
             }
         }
     }
