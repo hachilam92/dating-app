@@ -25,11 +25,7 @@ namespace Services
 
         var user = _mapper.Map<AppUser>(registerDTO);
 
-        using var hmac = new HMACSHA512();
-
         user.UserName = registerDTO.UserName;
-        user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password));
-        user.PasswordSalt = hmac.Key;
 
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
@@ -44,15 +40,6 @@ namespace Services
             .SingleOrDefaultAsync<AppUser>(x => x.UserName == loginDTO.UserName);
 
         if(user == null) return null;
-
-        using var hmac = new HMACSHA512(user.PasswordSalt);
-
-        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDTO.Password));
-
-        for (int i = 0; i < computedHash.Length; i++) 
-        {
-            if (computedHash[i] != user.PasswordHash[i]) return null;
-        }
 
         return user;
     }
