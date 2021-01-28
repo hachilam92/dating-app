@@ -38,6 +38,10 @@ namespace Services
         
         if (!result.Succeeded) throw new BadRequestException(result.Errors.ToString());
 
+        var roleResult = await _userManager.AddToRoleAsync(user, "Member");
+
+        if (!roleResult.Succeeded) throw new BadRequestException(result.Errors.ToString());
+
         return user;
     }
 
