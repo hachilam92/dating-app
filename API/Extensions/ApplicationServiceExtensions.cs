@@ -31,6 +31,7 @@ namespace Extensions
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<ILikesService, LikesService>();
             services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<LogUserActivity>();
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
             services.AddDbContext<DataContext>(options =>
