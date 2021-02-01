@@ -41,7 +41,7 @@ namespace Data.Repository
             return await _context.Messages
                 .Include(u => u.Sender)
                 .Include(u => u.Recipient)
-                .SingleOrDefaultAsync(x => x.Id == id);
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<PagedList<MessageDTO>> GetMessageForUser(MessageParams messageParams)
