@@ -10,7 +10,7 @@ namespace CustomExceptions
 
         public UnauthorizedException(string errorMessage)
         {
-            this.StatusCode = 404;
+            this.StatusCode = 401;
             this.ErrorMessage = errorMessage;
         } 
     }
