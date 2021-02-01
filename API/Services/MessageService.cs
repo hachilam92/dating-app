@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using AutoMapper;
 using CustomExceptions;
 using Data.Repository.Interface;
@@ -8,6 +6,8 @@ using Entities;
 using Helpers;
 using Interfaces;
 using Services.Interface;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Services
 {
@@ -20,7 +20,8 @@ namespace Services
             IUserRepository userRepository,
             IMessageRepository messageRepository,
             IMapper mapper
-        ) {
+        )
+        {
             _userRepository = userRepository;
             _messageRepository = messageRepository;
             _mapper = mapper;
@@ -35,7 +36,7 @@ namespace Services
 
             var sender = await _userRepository.GetUserByUsernameAsync(currentUsername);
             var recipient = await _userRepository.GetUserByUsernameAsync(createMessageDTO.RecipientUsername);
-        
+
             if (recipient == null) throw new NotFoundException();
 
             var message = new Message
@@ -51,13 +52,14 @@ namespace Services
 
             if (await _messageRepository.SaveAllAsync()) return _mapper.Map<MessageDTO>(message);
 
-            return null; 
+            return null;
         }
 
         public async Task<PagedList<MessageDTO>> GetMessagesForUser(
             string currentUsername,
             MessageParams messageParams
-        ) {
+        )
+        {
             messageParams.Username = currentUsername;
 
             return await _messageRepository.GetMessageForUser(messageParams);
@@ -95,5 +97,5 @@ namespace Services
 
             return await _messageRepository.SaveAllAsync();
         }
-  }
+    }
 }

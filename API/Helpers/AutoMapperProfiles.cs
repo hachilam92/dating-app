@@ -1,15 +1,12 @@
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using AutoMapper;
 using DTOs;
 using Entities;
 using Extensions;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.SignalR;
+using System.Linq;
 
 namespace Helpers
 {
-    public class AutoMapperProfiles : Profile 
+    public class AutoMapperProfiles : Profile
     {
         public AutoMapperProfiles()
         {

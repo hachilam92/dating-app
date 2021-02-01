@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using API.Data;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -10,6 +6,10 @@ using DTOs;
 using Entities;
 using Helpers;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Data.Repository
 {
@@ -17,11 +17,12 @@ namespace Data.Repository
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
-        
+
         public MessageRepository(
             DataContext context,
             IMapper mapper
-        ) {
+        )
+        {
             _context = context;
             _mapper = mapper;
         }
@@ -63,15 +64,16 @@ namespace Data.Repository
             var messages = query.ProjectTo<MessageDTO>(_mapper.ConfigurationProvider);
 
             return await PagedList<MessageDTO>.CreateAsync(
-                messages, 
-                messageParams.PageNumber, 
+                messages,
+                messageParams.PageNumber,
                 messageParams.PageSize);
         }
 
         public async Task<IEnumerable<MessageDTO>> GetMessageThread(
             string currentUsername,
             string recipientUsername
-        ) {
+        )
+        {
             var messages = await _context.Messages
                 .Include(u => u.Sender)
                 .ThenInclude(p => p.Photos)
@@ -85,12 +87,12 @@ namespace Data.Repository
                     && m.SenderDelted == false)
                 .OrderBy(m => m.MessageSent)
                 .ToListAsync();
-            
+
             var unreadMessages = messages
-                .Where(m => m.DateRead == null 
+                .Where(m => m.DateRead == null
                     && m.Recipient.UserName == currentUsername)
                 .ToList();
-            
+
             if (unreadMessages.Any())
             {
                 foreach (var message in unreadMessages)

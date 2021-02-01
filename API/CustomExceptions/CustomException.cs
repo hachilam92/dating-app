@@ -7,8 +7,8 @@ namespace CustomExceptions
         public int StatusCode { get; set; }
         public string ErrorMessage { get; set; }
 
-        public CustomException() {}
-        public CustomException(string errorMessage) 
+        public CustomException() { }
+        public CustomException(string errorMessage)
         {
             this.ErrorMessage = errorMessage;
         }

@@ -1,15 +1,11 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
-using Data.Repository.Interface;
 using DTOs;
-using Entities;
 using Extensions;
 using Helpers;
-using Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interface;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Controllers
 {
@@ -34,12 +30,13 @@ namespace Controllers
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MessageDTO>>> GetMessagesForUser(
-            [FromQuery]MessageParams messageParams
-        ) {
+            [FromQuery] MessageParams messageParams
+        )
+        {
             var messages = await _messageService.GetMessagesForUser(
                 User.GetUsername(),
                 messageParams);
-            
+
             Response.AddPaginationHeader(
                 messages.CurrentPage,
                 messages.PageSize,

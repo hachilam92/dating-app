@@ -1,6 +1,6 @@
-using System.Text.Json;
 using Helpers;
 using Microsoft.AspNetCore.Http;
+using System.Text.Json;
 
 namespace Extensions
 {
@@ -12,7 +12,8 @@ namespace Extensions
             int itemsPerPage,
             int totalItems,
             int totalPages
-        ) {
+        )
+        {
             var paginationHeader = new PaginationHeader(
                 currentPage,
                 itemsPerPage,

@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using CustomExceptions;
 using Data.Repository.Interface;
 using DTOs;
@@ -6,6 +5,7 @@ using Entities;
 using Helpers;
 using Interfaces;
 using Services.Interface;
+using System.Threading.Tasks;
 
 namespace Services
 {
@@ -28,7 +28,7 @@ namespace Services
 
             var userLike = await _likeRepository.GetUserLike(currentUserId, LikedUser.Id);
 
-            if (userLike != null) throw new BadRequestException("You already like this user"); 
+            if (userLike != null) throw new BadRequestException("You already like this user");
 
             userLike = new UserLike
             {

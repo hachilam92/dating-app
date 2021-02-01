@@ -1,15 +1,15 @@
 
+using Extensions;
+using Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Extensions;
-using Filters;
-using System.Text.Json;
-using System.Linq;
 using Serilog;
+using System.Linq;
+using System.Text.Json;
 
 namespace API
 {
@@ -29,10 +29,12 @@ namespace API
             services.AddApplicationServices(_config);
             services.AddCors();
             services
-                .AddControllers(config => {
+                .AddControllers(config =>
+                {
                     config.Filters.Add(new ExceptionFilter());
                 })
-                .AddJsonOptions(option => {
+                .AddJsonOptions(option =>
+                {
                     option.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                 });
             services.AddIdentityServices(_config);

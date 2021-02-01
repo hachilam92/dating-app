@@ -1,11 +1,8 @@
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using CloudinaryDotNet.Actions;
 using DTOs;
 using Entities;
 using Helpers;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace Services.Interface
 {

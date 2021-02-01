@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using AutoMapper;
 using Controllers;
 using DTOs;
@@ -9,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interface;
+using System.Threading.Tasks;
 
 namespace API.Controllers
 {
@@ -30,7 +30,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedList<MemberDTO>>> GetUsers([FromQuery]UserParams userParams)
+        public async Task<ActionResult<PagedList<MemberDTO>>> GetUsers([FromQuery] UserParams userParams)
         {
             var users = await _userService.GetUsers(User.GetUsername(), userParams);
 
@@ -47,7 +47,7 @@ namespace API.Controllers
         [HttpGet("{username}", Name = "GetUser")]
         public async Task<ActionResult<MemberDTO>> GetUser(string username)
         {
-           return await _userService.GetUser(username);
+            return await _userService.GetUser(username);
         }
 
         [HttpPut]
@@ -65,7 +65,7 @@ namespace API.Controllers
         {
             var photo = await _userService.AddPhotoAsync(User.GetUsername(), file);
 
-            if (photo != null) 
+            if (photo != null)
             {
                 return CreatedAtRoute(
                     "GetUser",
@@ -90,6 +90,6 @@ namespace API.Controllers
             if (await _userService.DeletePhotoAsync(User.GetUsername(), photoId)) return Ok();
 
             return BadRequest("Fail to delete the photo");
-        } 
+        }
     }
 }

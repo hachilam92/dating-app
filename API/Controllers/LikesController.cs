@@ -1,14 +1,11 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Data.Repository.Interface;
 using DTOs;
-using Entities;
 using Extensions;
 using Helpers;
-using Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interface;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Controllers
 {
@@ -28,13 +25,13 @@ namespace Controllers
 
             return BadRequest("Failed to like user");
         }
-        
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<LikeDTO>>> GetUserLikes([FromQuery]LikesParams likesParams)
+        public async Task<ActionResult<IEnumerable<LikeDTO>>> GetUserLikes([FromQuery] LikesParams likesParams)
         {
             likesParams.UserId = User.GetUserId();
 
-            var users =  await _likesService.GetUserLikes(likesParams);
+            var users = await _likesService.GetUserLikes(likesParams);
 
             Response.AddPaginationHeader(
                 users.CurrentPage,

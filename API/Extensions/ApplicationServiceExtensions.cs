@@ -1,16 +1,16 @@
 using API.Data;
+using AutoMapper;
 using Data;
+using Data.Repository;
+using Data.Repository.Interface;
+using Filters;
 using Helpers;
 using Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Services;
-using AutoMapper;
 using Services.Interface;
-using Filters;
-using Data.Repository.Interface;
-using Data.Repository;
 
 namespace Extensions
 {
@@ -19,7 +19,8 @@ namespace Extensions
         public static IServiceCollection AddApplicationServices(
             this IServiceCollection services,
             IConfiguration config
-        ) {
+        )
+        {
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ILikesRepository, LikeRepository>();

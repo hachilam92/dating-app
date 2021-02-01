@@ -5,7 +5,7 @@ namespace API.Data
 {
     public class DataContext : DbContext
     {
-        public DataContext(DbContextOptions options) : base(options) {}
+        public DataContext(DbContextOptions options) : base(options) { }
 
         public DbSet<AppUser> Users { get; set; }
         public DbSet<UserLike> Likes { get; set; }
@@ -34,7 +34,7 @@ namespace API.Data
                 .HasOne(u => u.Recipient)
                 .WithMany(m => m.MessageReceived)
                 .OnDelete(DeleteBehavior.Restrict);
-            
+
             builder.Entity<Message>()
                 .HasOne(u => u.Sender)
                 .WithMany(m => m.MessageSent)
