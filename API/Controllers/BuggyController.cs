@@ -26,7 +26,7 @@ namespace Controllers
         {
             var thing = _context.Users.Find(-1);
 
-            if(thing == null) throw new NotFoundException();
+            if (thing == null) throw new NotFoundException();
 
             return Ok(thing);
         }

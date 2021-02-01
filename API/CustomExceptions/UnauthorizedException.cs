@@ -12,6 +12,6 @@ namespace CustomExceptions
         {
             this.StatusCode = 401;
             this.ErrorMessage = errorMessage;
-        } 
+        }
     }
 }

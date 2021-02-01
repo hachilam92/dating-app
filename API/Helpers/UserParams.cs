@@ -1,5 +1,3 @@
-using System.Threading;
-
 namespace Helpers
 {
     public class UserParams : PaginationParams

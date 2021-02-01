@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using API.Data;
 using Data.Repository.Interface;
 using DTOs;
@@ -8,6 +5,8 @@ using Entities;
 using Extensions;
 using Helpers;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Data.Repository
 {
@@ -55,8 +54,8 @@ namespace Data.Repository
             });
 
             return await PagedList<LikeDTO>.CreateAsync(
-                likedUsers, 
-                likesParams.PageNumber, 
+                likedUsers,
+                likesParams.PageNumber,
                 likesParams.PageSize
             );
         }

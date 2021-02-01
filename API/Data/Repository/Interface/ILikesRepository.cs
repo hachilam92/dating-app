@@ -1,8 +1,7 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using DTOs;
 using Entities;
 using Helpers;
+using System.Threading.Tasks;
 
 namespace Data.Repository.Interface
 {

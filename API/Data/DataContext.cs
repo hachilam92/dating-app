@@ -55,7 +55,7 @@ namespace API.Data
                 .HasOne(u => u.Recipient)
                 .WithMany(m => m.MessageReceived)
                 .OnDelete(DeleteBehavior.Restrict);
-            
+
             builder.Entity<Message>()
                 .HasOne(u => u.Sender)
                 .WithMany(m => m.MessageSent)

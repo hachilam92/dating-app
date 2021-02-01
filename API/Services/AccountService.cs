@@ -1,6 +1,3 @@
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using API.Data;
 using AutoMapper;
 using CustomExceptions;
@@ -9,6 +6,9 @@ using Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Services.Interface;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Services
 {
@@ -30,7 +30,7 @@ namespace Services
     {
         if (await UserExists(registerDTO.UserName)) return null;
 
-        var user = _mapper.Map<AppUser>(registerDTO);
+            var user = _mapper.Map<AppUser>(registerDTO);
 
         user.UserName = registerDTO.UserName;
 
@@ -42,8 +42,8 @@ namespace Services
 
         if (!roleResult.Succeeded) throw new BadRequestException(result.Errors.ToString());
 
-        return user;
-    }
+            return user;
+        }
 
     public async Task<AppUser> VerifyUser(LoginDTO loginDTO)
     {
@@ -58,12 +58,11 @@ namespace Services
 
         if(!result.Succeeded) throw new UnauthorizedException("Invalid user name or password");
 
-        return user;
-    }
+            return user;
+        }
 
     private async Task<bool> UserExists(string username)
     {
         return await _userManager.Users.AnyAsync(x => x.UserName == username);
     }
-  }
 }

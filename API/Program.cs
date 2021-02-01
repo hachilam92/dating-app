@@ -1,6 +1,4 @@
 
-using System;
-using System.Threading.Tasks;
 using API.Data;
 using Data;
 using Entities;
@@ -11,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
+using System;
+using System.Threading.Tasks;
 
 namespace API
 {
@@ -26,11 +26,11 @@ namespace API
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .Enrich.FromLogContext()
-				.WriteTo.Console()
-				.WriteTo.Seq("http://localhost:5341")
-				.CreateLogger();
-			
-			Log.Information("Application started");
+                .WriteTo.Console()
+                .WriteTo.Seq("http://localhost:5341")
+                .CreateLogger();
+
+            Log.Information("Application started");
 
             try
             {
