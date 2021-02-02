@@ -10,6 +10,11 @@ namespace Filters
 {
     public class ExceptionFilter : IAsyncExceptionFilter
     {
+        private readonly ILogger _logger;
+        public ExceptionFilter(ILogger logger)
+        {
+            _logger = logger;
+        }
         public async Task OnExceptionAsync(ExceptionContext context)
         {
             var errorCode = 500;
@@ -30,7 +35,7 @@ namespace Filters
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
 
-            Log.Error(errorMessage + context.Exception.StackTrace);
+            _logger.Error(errorMessage + context.Exception.StackTrace);
 
             var json = JsonSerializer.Serialize(response, options);
 

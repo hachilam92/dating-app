@@ -26,12 +26,17 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(_config)
+                .CreateLogger();
+
+            services.AddSingleton<ILogger>(Log.Logger);
             services.AddApplicationServices(_config);
             services.AddCors();
             services
                 .AddControllers(config =>
                 {
-                    config.Filters.Add(new ExceptionFilter());
+                    config.Filters.Add(new ExceptionFilter(Log.Logger));
                 })
                 .AddJsonOptions(option =>
                 {
