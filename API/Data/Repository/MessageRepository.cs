@@ -75,22 +75,30 @@ namespace Data.Repository
         )
         {
             var messages = await _context.Messages
-                .Include(u => u.Sender)
-                .ThenInclude(p => p.Photos)
-                .Include(u => u.Recipient)
-                .ThenInclude(p => p.Photos)
                 .Where(m => m.Recipient.UserName == currentUsername
                     && m.RecipientDelted == false
                     && m.Sender.UserName == recipientUsername
                     || m.Recipient.UserName == recipientUsername
                     && m.Sender.UserName == currentUsername
                     && m.SenderDelted == false)
+                .Select(m => new MessageDTO{
+                    Id = m.Id,
+                    SenderId = m.SenderId,
+                    SenderUsername = m.SenderUsername,
+                    SenderPhotoUrl = m.Sender.Photos.FirstOrDefault(x => x.IsMain).Url,
+                    RecipientId = m.RecipientId,
+                    RecipientUsername = m.RecipientUsername,
+                    RecipientPhotoUrl = m.Recipient.Photos.FirstOrDefault(x => x.IsMain).Url,
+                    Content = m.Content,
+                    DateRead = m.DateRead,
+                    MessageSent = m.MessageSent
+                })
                 .OrderBy(m => m.MessageSent)
                 .ToListAsync();
 
             var unreadMessages = messages
                 .Where(m => m.DateRead == null
-                    && m.Recipient.UserName == currentUsername)
+                    && m.RecipientUsername == currentUsername)
                 .ToList();
 
             if (unreadMessages.Any())
@@ -103,7 +111,7 @@ namespace Data.Repository
                 await _context.SaveChangesAsync();
             }
 
-            return _mapper.Map<IEnumerable<MessageDTO>>(messages);
+            return messages;
         }
 
         public async Task<bool> SaveAllAsync()
