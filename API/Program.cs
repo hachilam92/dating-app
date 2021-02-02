@@ -22,15 +22,9 @@ namespace API
             using var scope = host.Services.CreateScope();
             var services = scope.ServiceProvider;
 
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .WriteTo.Seq("http://localhost:5341")
-                .CreateLogger();
+            var logger = services.GetRequiredService<ILogger>();
 
-            Log.Information("Application started");
+            logger.Information("Application started");
 
             try
             {
@@ -42,9 +36,7 @@ namespace API
             }
             catch (Exception ex)
             {
-                // var logger = services.GetRequiredService<ILogger<Program>>();
-                // logger.LogError(ex, "An error occurred during migration");
-                Log.Error(ex, "An error occurred during migration");
+                logger.Error(ex, "An error occurred during migration");
             }
 
             try
@@ -53,11 +45,7 @@ namespace API
             }
             catch (Exception ex)
             {
-                Log.Fatal(ex, "Host terminated unexpectedly");
-            }
-            finally
-            {
-                Log.CloseAndFlush();
+                logger.Fatal(ex, "Host terminated unexpectedly");
             }
         }
 
