@@ -81,7 +81,8 @@ namespace Data.Repository
                     || m.Recipient.UserName == recipientUsername
                     && m.Sender.UserName == currentUsername
                     && m.SenderDelted == false)
-                .Select(m => new MessageDTO{
+                .Select(m => new MessageDTO
+                {
                     Id = m.Id,
                     SenderId = m.SenderId,
                     SenderUsername = m.SenderUsername,
