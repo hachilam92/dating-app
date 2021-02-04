@@ -15,8 +15,9 @@ namespace API.Data
         IdentityUserLogin<int>,
         IdentityRoleClaim<int>,
         IdentityUserToken<int>
-    > {
-        public DataContext(DbContextOptions options) : base(options) {}
+    >
+    {
+        public DataContext(DbContextOptions options) : base(options) { }
         public DbSet<UserLike> Likes { get; set; }
         public DbSet<Message> Messages { get; set; }
 

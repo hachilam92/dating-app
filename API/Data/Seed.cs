@@ -1,13 +1,9 @@
-using API.Data;
 using Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Entities;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 
 namespace Data
 {
@@ -16,7 +12,8 @@ namespace Data
         public static async Task SeedUsers(
             UserManager<AppUser> userManager,
             RoleManager<AppRole> roleManager
-        ) {
+        )
+        {
             if (await userManager.Users.AnyAsync()) return;
 
             var userData = await System.IO.File.ReadAllTextAsync("Data/UserSeedData.json");
@@ -33,9 +30,9 @@ namespace Data
             foreach (var role in roles)
             {
                 await roleManager.CreateAsync(role);
-            } 
+            }
 
-            foreach(var user in users)
+            foreach (var user in users)
             {
                 await userManager.CreateAsync(user, "Pa$$w0rd");
                 await userManager.AddToRoleAsync(user, "Member");
@@ -47,7 +44,7 @@ namespace Data
             };
 
             await userManager.CreateAsync(admin, "Pa$$w0rd");
-            await userManager.AddToRolesAsync(admin, new[] {"Admin", "Moderator"});
+            await userManager.AddToRolesAsync(admin, new[] { "Admin", "Moderator" });
         }
     }
 }

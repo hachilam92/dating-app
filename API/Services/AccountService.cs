@@ -1,4 +1,3 @@
-using API.Data;
 using AutoMapper;
 using CustomExceptions;
 using DTOs;
@@ -6,8 +5,6 @@ using Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Services.Interface;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Services
@@ -21,7 +18,8 @@ namespace Services
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             IMapper mapper
-        ) {
+        )
+        {
             _userManager = userManager;
             _signInManager = signInManager;
             _mapper = mapper;
@@ -30,20 +28,20 @@ namespace Services
         {
             if (await UserExists(registerDTO.UserName)) return null;
 
-                var user = _mapper.Map<AppUser>(registerDTO);
+            var user = _mapper.Map<AppUser>(registerDTO);
 
             user.UserName = registerDTO.UserName;
 
-            var result = await  _userManager.CreateAsync(user, registerDTO.Password);
-            
+            var result = await _userManager.CreateAsync(user, registerDTO.Password);
+
             if (!result.Succeeded) throw new BadRequestException(result.Errors.ToString());
 
             var roleResult = await _userManager.AddToRoleAsync(user, "Member");
 
             if (!roleResult.Succeeded) throw new BadRequestException(result.Errors.ToString());
 
-                return user;
-            }
+            return user;
+        }
 
         public async Task<AppUser> VerifyUser(LoginDTO loginDTO)
         {
@@ -51,15 +49,15 @@ namespace Services
                 .Include(p => p.Photos)
                 .SingleOrDefaultAsync<AppUser>(x => x.UserName == loginDTO.UserName);
 
-            if(user == null) throw new UnauthorizedException("Invalid user name or password");
+            if (user == null) throw new UnauthorizedException("Invalid user name or password");
 
             var result = await _signInManager
                 .CheckPasswordSignInAsync(user, loginDTO.Password, false);
 
-            if(!result.Succeeded) throw new UnauthorizedException("Invalid user name or password");
+            if (!result.Succeeded) throw new UnauthorizedException("Invalid user name or password");
 
-                return user;
-            }
+            return user;
+        }
 
         private async Task<bool> UserExists(string username)
         {

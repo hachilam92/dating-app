@@ -1,11 +1,7 @@
-using System.Linq;
-using System.Threading.Tasks;
-using Entities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Services.Interface;
+using System.Threading.Tasks;
 
 namespace Controllers
 {
@@ -27,7 +23,7 @@ namespace Controllers
         }
 
         [HttpPost("edit-roles/{username}")]
-        public async Task<ActionResult> EditRoles(string username, [FromQuery]string roles)
+        public async Task<ActionResult> EditRoles(string username, [FromQuery] string roles)
         {
             return Ok(await _adminService.EditRoles(username, roles));
         }
