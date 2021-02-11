@@ -1,11 +1,11 @@
+using API.Data;
+using Entities;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using API.Data;
-using Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Data
 {
@@ -18,7 +18,7 @@ namespace Data
             var userData = await System.IO.File.ReadAllTextAsync("Data/UserSeedData.json");
             var users = JsonSerializer.Deserialize<List<AppUser>>(userData);
 
-            foreach(var user in users)
+            foreach (var user in users)
             {
                 using var hmac = new HMACSHA512();
 

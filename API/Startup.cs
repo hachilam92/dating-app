@@ -1,16 +1,15 @@
 
+using Extensions;
+using Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Extensions;
-using Middleware;
-using Filters;
-using System;
-using System.Text.Json;
+using Serilog;
 using System.Linq;
+using System.Text.Json;
 
 namespace API
 {
@@ -27,13 +26,20 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(_config)
+                .CreateLogger();
+
+            services.AddSingleton<ILogger>(Log.Logger);
             services.AddApplicationServices(_config);
             services.AddCors();
             services
-                .AddControllers(config => {
-                    config.Filters.Add(new ExceptionFilter());
+                .AddControllers(config =>
+                {
+                    config.Filters.Add(new ExceptionFilter(Log.Logger));
                 })
-                .AddJsonOptions(option => {
+                .AddJsonOptions(option =>
+                {
                     option.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                 });
             services.AddIdentityServices(_config);
@@ -54,6 +60,8 @@ namespace API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
             }
+
+            app.UseSerilogRequestLogging();
 
             app.UseHttpsRedirection();
 

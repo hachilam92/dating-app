@@ -1,10 +1,10 @@
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using DTOs;
+using Entities;
 using Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Services.Interface;
 using System.Linq;
-using Entities;
+using System.Threading.Tasks;
 
 namespace Controllers
 {
@@ -15,7 +15,8 @@ namespace Controllers
         public AccountController(
             ITokenService tokenService,
             IAccountService accountService
-        ) {
+        )
+        {
             _tokenService = tokenService;
             _accountService = accountService;
         }
@@ -24,7 +25,7 @@ namespace Controllers
         public async Task<ActionResult<UserDTO>> Register(RegisterDTO registerDTO)
         {
             var user = await _accountService.AddUser(registerDTO);
-             
+
             if (user == null) return BadRequest("Username is taken");
 
             return new UserDTO
@@ -40,7 +41,7 @@ namespace Controllers
         public async Task<ActionResult<UserDTO>> Login(LoginDTO loginDTO)
         {
             AppUser user = await _accountService.VerifyUser(loginDTO);
-            
+
             if (user == null) return Unauthorized("Invalid user name or password");
 
             return new UserDTO

@@ -1,14 +1,13 @@
 
-using System;
-using System.Threading.Tasks;
 using API.Data;
 using Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Serilog;
+using System;
+using System.Threading.Tasks;
 
 namespace API
 {
@@ -20,12 +19,9 @@ namespace API
             using var scope = host.Services.CreateScope();
             var services = scope.ServiceProvider;
 
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .WriteTo.Console()
-                .CreateLogger();
+            var logger = services.GetRequiredService<ILogger>();
 
-            Log.Information("Application started");
+            logger.Information("Application started");
 
             try
             {
@@ -35,16 +31,22 @@ namespace API
             }
             catch (Exception ex)
             {
-                // var logger = services.GetRequiredService<ILogger<Program>>();
-                // logger.LogError(ex, "An error occurred during migration");
-                Log.Error(ex, "An error occurred during migration");
+                logger.Error(ex, "An error occurred during migration");
             }
 
-            await host.RunAsync();
+            try
+            {
+                await host.RunAsync();
+            }
+            catch (Exception ex)
+            {
+                logger.Fatal(ex, "Host terminated unexpectedly");
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

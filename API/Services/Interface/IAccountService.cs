@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
 using DTOs;
 using Entities;
+using System.Threading.Tasks;
 
 namespace Services.Interface
 {
